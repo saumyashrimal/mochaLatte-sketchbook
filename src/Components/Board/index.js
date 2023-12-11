@@ -9,12 +9,13 @@ export default function Board() {
     const shouldDraw = useRef(null);
     const {activeMenuItem, actionMenuItem} = useSelector((state) => state.menu);
     const {color, size} = useSelector((state) => state.toolbox[activeMenuItem]);
+    const drawHistory = useRef([]);
+    const historyPointer = useRef(0);
 
     useEffect(() => {
       if(!canvasRef.current) return;
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
-      console.log("actionMenuItem = ", actionMenuItem)
       if(actionMenuItem === MENUITEMS.DOWNLOAD){
         const URL = canvas.toDataURL();
         const anchor = document.createElement('a');
@@ -22,6 +23,10 @@ export default function Board() {
         anchor.download = 'sketch.jpg';
         anchor.click();
         console.log("url = ", URL);
+      } else if(actionMenuItem === MENUITEMS.UNDO) {
+        if(historyPointer.current > 0) historyPointer.current -= 1;
+        const imageData = drawHistory.current[historyPointer.current];
+        context.putImageData(imageData,0,0);
       }
       dispatch(actionItemClick(null));
     }, [actionMenuItem, dispatch])
@@ -67,6 +72,9 @@ export default function Board() {
 
         const handleMouseUp = (e) => {
           shouldDraw.current = false;
+          const imageData = context.getImageData(0,0,canvas.width,canvas.height);
+          drawHistory.current.push(imageData);
+          historyPointer.current = drawHistory.current.length - 1;
         }
         
         canvas.addEventListener('mousedown', handleMouseDown);
