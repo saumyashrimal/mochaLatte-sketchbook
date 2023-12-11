@@ -11,6 +11,10 @@ export default function index() {
     const handleMenuClick = (itemName) => {
         dispatch(menuItemClick(itemName));
     }
+
+    const handleActionItemClick = (itemName) => {
+        dispatch(actionItemClick(itemName));
+    }
   return (
     <div className={styles.menuContainer}>
         <div className={cx(styles.iconWrapper, {[styles.active]: activeMenuItem === MENUITEMS.PENCIL})} onClick={() => handleMenuClick(MENUITEMS.PENCIL)}>
@@ -19,13 +23,13 @@ export default function index() {
         <div className={cx(styles.iconWrapper, {[styles.active]: activeMenuItem === MENUITEMS.ERASER})} onClick={() => handleMenuClick(MENUITEMS.ERASER)}>
             <FontAwesomeIcon icon={faEraser} className={styles.icon} />
         </div>
-        <div className={styles.iconWrapper} onClick={() => handleMenuClick(MENUITEMS.UNDO)}>
+        <div className={styles.iconWrapper} onClick={() => handleActionItemClick(MENUITEMS.UNDO)}>
             <FontAwesomeIcon icon={faRotateLeft} className={styles.icon} />
         </div>
-        <div className={styles.iconWrapper} onClick={() => handleMenuClick(MENUITEMS.REDO)}>
+        <div className={styles.iconWrapper} onClick={() => handleActionItemClick(MENUITEMS.REDO)}>
             <FontAwesomeIcon icon={faRotateRight} className={styles.icon} />
         </div>
-        <div className={styles.iconWrapper} onClick={() => handleMenuClick(MENUITEMS.DOWNLOAD)}>
+        <div className={styles.iconWrapper} onClick={() => handleActionItemClick(MENUITEMS.DOWNLOAD)}>
             <FontAwesomeIcon icon={faFileArrowDown} className={styles.icon} />
         </div>
     </div>
