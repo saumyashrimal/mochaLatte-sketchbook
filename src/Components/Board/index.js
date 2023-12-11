@@ -23,8 +23,9 @@ export default function Board() {
         anchor.download = 'sketch.jpg';
         anchor.click();
         console.log("url = ", URL);
-      } else if(actionMenuItem === MENUITEMS.UNDO) {
-        if(historyPointer.current > 0) historyPointer.current -= 1;
+      } else if(actionMenuItem === MENUITEMS.UNDO || actionMenuItem === MENUITEMS.REDO) {
+        if(historyPointer.current > 0 && actionMenuItem === MENUITEMS.UNDO) historyPointer.current -= 1;
+        if(historyPointer.current < drawHistory.current.length-1 && actionMenuItem === MENUITEMS.REDO) historyPointer.current += 1;
         const imageData = drawHistory.current[historyPointer.current];
         context.putImageData(imageData,0,0);
       }
