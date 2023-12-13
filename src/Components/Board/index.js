@@ -2,6 +2,7 @@ import { MENUITEMS } from '@/contants';
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {activeMenuItem, actionItemClick} from '@/slice/menuSlice';
+import {socket} from '@/socket';
 
 export default function Board() {
     const dispatch = useDispatch();
@@ -64,11 +65,13 @@ export default function Board() {
         const handleMouseDown = (e) => {
           shouldDraw.current = true;
           beginPath(e.clientX, e.clientY);
+          socket.emit('beginPath', {x: e.clientX , y: e.clientY});
         }
 
         const handleMouseMove = (e) => {
           if(!shouldDraw.current) return;
           drawLine(e.clientX,e.clientY);
+          socket.emit("drawLine", {x: e.clientX , y: e.clientY});
         }
 
         const handleMouseUp = (e) => {
@@ -81,6 +84,29 @@ export default function Board() {
         canvas.addEventListener('mousedown', handleMouseDown);
         canvas.addEventListener('mouseup', handleMouseUp);
         canvas.addEventListener('mousemove', handleMouseMove);
+
+        const handleBeginPath = (path) => {
+          beginPath(path.x, path.y);
+        }
+
+        const handleDrawLine = (path) => {
+          drawLine(path.x,path.y);
+        }
+        socket.on('connect', () => {
+          console.log("connected on client")
+        })
+
+        socket.on("beginPath", handleBeginPath);
+        socket.on("drawLine", handleDrawLine);
+
+
+        return () => {
+          canvas.removeEventListener('mousedown', handleMouseDown)
+          canvas.removeEventListener('mouseup', handleMouseUp)
+          canvas.removeEventListener('mousemove', handleMouseMove)
+          socket.off("beginPath", handleBeginPath);
+          socket.off("drawLine", handleDrawLine);
+        }
     }, []);
   return (
     <canvas ref={canvasRef} ></canvas>
