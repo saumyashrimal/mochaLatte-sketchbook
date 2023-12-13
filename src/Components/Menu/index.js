@@ -5,7 +5,7 @@ import { menuItemClick, actionItemClick } from '@/slice/menuSlice';
 import { MENUITEMS } from '@/contants';
 import cx from 'classnames';
 import {useDispatch, useSelector} from 'react-redux';
-export default function index() {
+const Menu = () => {
     const dispatch = useDispatch();
     const activeMenuItem = useSelector((state) => state.menu.activeMenuItem);
     const handleMenuClick = (itemName) => {
@@ -35,3 +35,5 @@ export default function index() {
     </div>
   )
 }
+
+export default Menu;
